@@ -11,7 +11,9 @@ public record ApplicationConfig(
     @NotNull
     Scheduler scheduler,
     String gitBaseUrl,
-    String sofBaseUrl
+    String sofBaseUrl,
+    int maxAttempts,
+    int timeout
 ) {
     public record Scheduler(boolean enable, @NotNull Duration interval, @NotNull Duration forceCheckDelay) {
     }

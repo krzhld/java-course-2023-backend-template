@@ -2,16 +2,15 @@ package edu.java.clients;
 
 import edu.java.dtos.GitHubResponse;
 import java.time.Duration;
+import edu.java.dtos.StackOverflowResponse;
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.util.retry.Retry;
+import static org.springframework.retry.RetryContext.MAX_ATTEMPTS;
 
-@Component
 public class GitHubClientImplementation implements GitHubClient {
 
     private final WebClient githubClient;
-    private static final int MAX_ATTEMPTS = 3;
 
     public GitHubClientImplementation(WebClient githubClient) {
         this.githubClient = githubClient;
@@ -26,7 +25,7 @@ public class GitHubClientImplementation implements GitHubClient {
             .retrieve()
             .bodyToMono(GitHubResponse.class)
             .onErrorReturn(new GitHubResponse())
-            .retryWhen(Retry.fixedDelay(MAX_ATTEMPTS, Duration.ofSeconds(1)))
+            .retryWhen(Retry.fixedDelay(Long.parseLong(MAX_ATTEMPTS), Duration.ofSeconds(1)))
             .block();
     }
 }
