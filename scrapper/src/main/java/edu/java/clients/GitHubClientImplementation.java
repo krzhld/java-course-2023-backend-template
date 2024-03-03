@@ -2,6 +2,7 @@ package edu.java.clients;
 
 import edu.java.dtos.GitHubResponse;
 import java.time.Duration;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.util.retry.Retry;
@@ -11,6 +12,7 @@ public class GitHubClientImplementation implements GitHubClient {
 
     private final WebClient githubClient;
 
+    @Autowired
     public GitHubClientImplementation(WebClient githubClient) {
         this.githubClient = githubClient;
     }
