@@ -10,7 +10,6 @@ import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.request.SetMyCommands;
 import com.pengrad.telegrambot.response.BaseResponse;
 import edu.java.bot.chatCommand.ChatCommand;
-import edu.java.bot.chatCommand.StartCommand;
 import edu.java.bot.commandHandler.CommandHandler;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
