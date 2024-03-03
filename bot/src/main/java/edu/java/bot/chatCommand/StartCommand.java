@@ -1,19 +1,48 @@
 package edu.java.bot.chatCommand;
 
 import com.pengrad.telegrambot.request.SendMessage;
-import edu.java.bot.pojo.Person;
-import edu.java.bot.service.ChatService;
+import edu.java.bot.pojo.State;
+import edu.java.bot.pojo.TgChat;
+import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
 @Slf4j
+@Component
 public class StartCommand implements ChatCommand {
-    private final static String SUCCESSFUL_REGISTRATION = """
-        Регистрация прошла успешно.
-        """;
+
+    private String message;
 
     @Override
-    public SendMessage getMessage(Person person, ChatService service) {
-        log.info(String.format("Пользователей с chatId %d был зарегистрирован.", person.getId()));
-        return new SendMessage(person.getId(), SUCCESSFUL_REGISTRATION);
+    public boolean checkState(State state) {
+        return state.equals(State.DEFAULT);
+    }
+
+    @Override
+    public boolean handle(String text, TgChat sender) {
+        if (Objects.equals(text, "/start")) {
+            checkRegistration(sender);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private void checkRegistration(TgChat sender) {
+        if (sender == null) {
+            message = "Регистрация прошла успешно.";
+        } else {
+            message = "Вы уже зарегистрированы.";
+        }
+    }
+
+    @Override
+    public SendMessage getMessage(long receiverId) {
+        return new SendMessage(receiverId, message);
+    }
+
+    @Override
+    public String getDescription() {
+        return "/start -- зарегистрировать пользователя";
     }
 }

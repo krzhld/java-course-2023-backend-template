@@ -10,8 +10,8 @@ import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.request.SetMyCommands;
 import com.pengrad.telegrambot.response.BaseResponse;
 import edu.java.bot.chatCommand.ChatCommand;
+import edu.java.bot.chatCommand.StartCommand;
 import edu.java.bot.commandHandler.CommandHandler;
-import edu.java.bot.pojo.Person;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -19,13 +19,12 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 public class BotImplementation implements Bot {
+
     private final TelegramBot telegramBot;
-    private final ChatService chatService;
     private final CommandHandler commandHandler;
 
-    public BotImplementation(TelegramBot telegramBot, ChatService chatService, CommandHandler commandHandler) {
+    public BotImplementation(TelegramBot telegramBot, CommandHandler commandHandler) {
         this.telegramBot = telegramBot;
-        this.chatService = chatService;
         this.commandHandler = commandHandler;
         start();
     }
@@ -39,10 +38,10 @@ public class BotImplementation implements Bot {
     public int process(List<Update> updates) {
         for (Update update : updates) {
             Message message = update.message();
+            long id = message.chat().id();
             String text = message.text().trim();
-            ChatCommand command = commandHandler.handle(text);
-            Person person = new Person(message.chat().id());
-            SendMessage request = command.getMessage(person, chatService);
+            ChatCommand command = commandHandler.handle(id, text);
+            SendMessage request = command.getMessage(id);
             execute(request);
         }
         return UpdatesListener.CONFIRMED_UPDATES_ALL;
@@ -50,8 +49,8 @@ public class BotImplementation implements Bot {
 
     @Override
     public void start() {
-        SetMyCommands commands = new SetMyCommands(menuCommandArray());
-        execute(commands);
+        SetMyCommands menuCommands = new SetMyCommands(menuCommandArray());
+        execute(menuCommands);
         telegramBot.setUpdatesListener(
             this,
             e -> {

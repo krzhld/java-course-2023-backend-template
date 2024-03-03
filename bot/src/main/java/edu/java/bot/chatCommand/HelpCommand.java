@@ -1,24 +1,46 @@
 package edu.java.bot.chatCommand;
 
 import com.pengrad.telegrambot.request.SendMessage;
-import edu.java.bot.pojo.Person;
-import edu.java.bot.service.ChatService;
-import lombok.extern.java.Log;
+import edu.java.bot.pojo.State;
+import edu.java.bot.pojo.TgChat;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-@Log
+@Component
 public class HelpCommand implements ChatCommand {
-    private static final String COMMAND_LIST = """
-        Список команд:
-        /start -- зарегистрировать пользователя
-        /help -- вывести окно с командами
-        /track -- начать отслеживание ссылки
-        /untrack -- прекратить отслеживание ссылки
-        /list -- показать список отслеживаемых ссылок
-        """;
+
+    private final String helpOutput;
+
+    @Autowired
+    public HelpCommand(List<ChatCommand> commandList) {
+        commandList.add(this);
+        helpOutput = commandList
+            .stream()
+            .map(ChatCommand::getDescription)
+            .filter(v -> !v.isBlank())
+            .collect(Collectors.joining("\n"));
+    }
 
     @Override
-    public SendMessage getMessage(Person person, ChatService service) {
-        log.info("Вывели список команд.");
-        return new SendMessage(person.getId(), COMMAND_LIST);
+    public boolean checkState(State state) {
+        return state.equals(State.DEFAULT);
+    }
+
+    @Override
+    public boolean handle(String text, TgChat sender) {
+        return Objects.equals(text, "/help");
+    }
+
+    @Override
+    public SendMessage getMessage(long receiverId) {
+        return new SendMessage(receiverId, helpOutput);
+    }
+
+    @Override
+    public String getDescription() {
+        return "/help -- вывести окно с командами";
     }
 }

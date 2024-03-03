@@ -1,9 +1,15 @@
 package edu.java.bot.chatCommand;
 
 import com.pengrad.telegrambot.request.SendMessage;
-import edu.java.bot.pojo.Person;
-import edu.java.bot.service.ChatService;
+import edu.java.bot.pojo.State;
+import edu.java.bot.pojo.TgChat;
 
 public interface ChatCommand {
-    SendMessage getMessage(Person person, ChatService service);
+    boolean checkState(State state);
+
+    boolean handle(String text, TgChat sender);
+
+    SendMessage getMessage(long receiverId);
+
+    String getDescription();
 }

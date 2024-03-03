@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class BotConfig {
+
     private final ApplicationConfig appConfig;
 
     public BotConfig(ApplicationConfig appConfig) {
@@ -16,5 +17,4 @@ public class BotConfig {
     public TelegramBot bot() {
         return new TelegramBot(appConfig.telegramToken());
     }
-
 }
