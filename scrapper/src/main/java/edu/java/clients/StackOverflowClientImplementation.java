@@ -3,7 +3,6 @@ package edu.java.clients;
 import edu.java.dtos.StackOverflowResponse;
 import java.time.Duration;
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.util.retry.Retry;
 import static org.springframework.retry.RetryContext.MAX_ATTEMPTS;

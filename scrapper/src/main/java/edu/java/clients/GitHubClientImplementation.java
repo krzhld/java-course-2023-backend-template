@@ -2,7 +2,6 @@ package edu.java.clients;
 
 import edu.java.dtos.GitHubResponse;
 import java.time.Duration;
-import edu.java.dtos.StackOverflowResponse;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.util.retry.Retry;
